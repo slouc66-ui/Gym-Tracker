@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
+<html lang=""en"><head><meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Workout</title>
-<style>
-  :root {
+<title>orkout</title>title>
+<style>  :root {
     --blue: #007aff;
     --bg: #f2f2f7;
     --text: #1c1c1e;
@@ -65,7 +62,73 @@
   .rest-time { font-size: 15px; color: var(--blue); font-weight: 700; font-variant-numeric: tabular-nums; }
   .rest-skip-btn { border: none; background: transparent; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; }
   .rest-start-btn {
-    width: 100%; height: 34px; margin-top: 8px; border-radius: : "dumbbell", step: 2.5 },
+    width: 100%; height: 34px; margin-top: 8px; border-radius: 9px; border: 1px solid var(--border);
+    background: #fff; color: var(--blue); font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
+  }
+  .icon-circle {
+    width: 38px; height: 38px; border-radius: 50%; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
+  }
+  .icon-circle-sm {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
+  }
+  .ex-name { font-size: 16px; font-weight: 600; }
+  .ex-meta { font-size: 13px; color: var(--muted); margin-top: 1px; }
+  .add-exercise-btn {
+    width: 100%; margin-top: 16px; height: 48px; border-radius: 14px; border: none; background: var(--blue);
+    color: #fff; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center;
+    gap: 8px; cursor: pointer;
+  }
+  .picker-card { margin-top: 16px; background: #fff; border-radius: 16px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .picker-title { font-size: 16px; font-weight: 600; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .picker-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
+  .picker-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 10px; border: none;
+    background: transparent; font-size: 15px; color: var(--text); cursor: pointer; text-align: left; width: 100%;
+  }
+  .picker-item:hover { background: var(--bg); }
+  .picker-cat { font-size: 12px; color: var(--muted); }
+  .new-exercise-btn {
+    margin-top: 10px; width: 100%; height: 40px; border-radius: 10px; border: 1px dashed #c7c7cc; background: transparent;
+    color: var(--blue); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center;
+    gap: 6px; cursor: pointer;
+  }
+  .new-exercise-form { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .text-input { height: 38px; border-radius: 10px; border: 1px solid var(--border); background: #f9f9fb; padding: 0 12px; font-size: 15px; outline: none; width: 100%; }
+  .category-row { display: flex; gap: 8px; }
+  .category-chip {
+    flex: 1; height: 36px; border-radius: 9px; border: 1px solid var(--border); background: #fff;
+    display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #3a3a3c; cursor: pointer;
+  }
+  .category-chip.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .confirm-btn { height: 40px; border-radius: 10px; border: none; background: #34c759; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; }
+</style>
+</head>head>
+<body>
+<div id="app"><p style="color:#8e8e93;font-size:15px;padding:40px 4px;">oading workout …</p>p></div>div>
+
+<script>
+/* ---------- Icons (simple Apple-style SVGs) ---------- */
+const ICONS = {
+  dumbbell: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 17.5 17.5"/><path d="M2 8 5 5"/><path d="M22 16l-3 3"/><path d="M14.5 3.5l4 4"/><path d="M3.5 14.5l4 4"/><rect x="1" y="10" width="4" height="4" rx="1"/><rect x="19" y="10" width="4" height="4" rx="1"/><path d="M9 5l-2 2"/><path d="M17 19l2-2"/></svg>',
+  machine: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  cardio: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M4 17l4-2 2-4"/><path d="M10 11l2 2 5-2"/><path d="M12 13l-1 4 4 4"/><path d="M6 21l3-4"/></svg>',
+  x: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>',
+  chevronDown: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  chevronUp: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
+  plus: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
+  flame: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 1 1-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
+  timer: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>',
+};
+function icon(name, size) { return ICONS[name].replaceAll("{s}", size || 18); }
+
+/* ---------- Categories & exercises ---------- */
+const CATEGORY_META = {
+  free: { label: "Free weight", icon: "dumbbell", step: 2.5 },
   machine: { label: "Machine", icon: "machine", step: 5 },
   cardio: { label: "Cardio", icon: "cardio", step: 0 },
 };
@@ -81,9 +144,21 @@ const DEFAULT_EXERCISES = [
 /* ---------- Helpers ---------- */
 function epley1RM(weight, reps) { if (!weight || !reps) return 0; return weight * (1 + reps / 30); }
 function formatTime(sec) { const m = Math.floor(sec / 60); const s = sec % 60; return m + ":" + String(s).padStart(2, "0"); }
+function todayKey() { const d = new Date(); const tz = d.getTimezoneOffset() * 60000; return new Date(d - tz).toISOString().slice(0, 10); }
+
+async function loadJSON(key, fallback) {
+  try { const res = await window.storage.get(key, false); if (!res) return fallback; return JSON.parse(res.value); }
+  catch (e) { return fallback; }
+}
+async function saveJSON(key, value) {
+  try { await window.storage.set(key, JSON.stringify(value), false); }
+  catch (e) { console.error("Save failed", e); }
+}
 
 /* ---------- App state ---------- */
 const state = {
+  ready: false,
+  currentDate: todayKey(),
   exercises: [...DEFAULT_EXERCISES],
   activeIds: [],       // ids of exercises added to today's list
   session: {},          // exId -> [{id, weight, reps, warmup}]
@@ -98,24 +173,42 @@ const state = {
   newCategory: "free",
 };
 
+async function init() {
+  const custom = await loadJSON("custom-exercises", []);
+  state.exercises = [...DEFAULT_EXERCISES, ...custom];
+  state.bestEver = await loadJSON("best-ever", {});
+  const session = await loadJSON("workout:" + state.currentDate, {});
+  state.session = session;
+  state.activeIds = Object.keys(session);
+  state.activeIds.forEach(id => state.expanded[id] = true);
+  state.ready = true;
+  render();
+}
+
+function autosave() { saveJSON("workout:" + state.currentDate, state.session); }
+
 function addExerciseToSession(id) {
   if (!state.activeIds.includes(id)) state.activeIds.push(id);
   if (!state.session[id]) state.session[id] = [];
   state.expanded[id] = true;
   state.showPicker = false;
+  autosave();
   render();
 }
 
 function addSet(exId, warmup) {
   state.session[exId].push({ id: Date.now(), weight: "", reps: "", warmup });
+  autosave();
   render();
 }
 function updateSet(exId, setId, field, value) {
   const st = state.session[exId].find(s => s.id === setId);
   st[field] = value;
+  autosave();
 }
 function removeSet(exId, setId) {
   state.session[exId] = state.session[exId].filter(s => s.id !== setId);
+  autosave();
   render();
 }
 
@@ -136,6 +229,7 @@ function confirmSet(exId, setId) {
     const ex = state.exercises.find(e => e.id === exId);
     const meta = CATEGORY_META[ex.category];
     state.bestEver[exId] = { weight, reps };
+    saveJSON("best-ever", state.bestEver);
     if (meta.step > 0) {
       state.suggestions[exId] = `New personal record. Increase the weight next time by ${meta.step} kg to ${weight + meta.step} kg.`;
     }
@@ -182,6 +276,8 @@ function createExercise() {
   if (!name) return;
   const id = name.toLowerCase().replace(/\s+/g, "-") + "-" + Date.now();
   state.exercises.push({ id, name, category: state.newCategory });
+  const custom = state.exercises.filter(e => !DEFAULT_EXERCISES.some(d => d.id === e.id));
+  saveJSON("custom-exercises", custom);
   state.newName = "";
   state.showAdd = false;
   addExerciseToSession(id);
@@ -190,6 +286,7 @@ function createExercise() {
 /* ---------- Rendering ---------- */
 function render() {
   const app = document.getElementById("app");
+  if (!state.ready) { app.innerHTML = '<p style="color:#8e8e93;font-size:15px;padding:40px 4px;">Loading workout …</p>'; return; }
   const availableToAdd = state.exercises.filter(e => !state.activeIds.includes(e.id));
 
   let html = `
@@ -269,7 +366,7 @@ function render() {
         <span class="picker-title">Choose exercise</span>
         <button class="icon-btn" id="closePicker">${icon("x")}</button>
       </div>
-      <div clas s="picker-list">
+      <div class="picker-list">
         ${availableToAdd.map(ex => `
           <button class="picker-item" data-pick="${ex.id}">
             <div class="icon-circle-sm">${icon(CATEGORY_META[ex.category].icon, 16)}</div>
@@ -321,6 +418,8 @@ function bindEvents() {
   qa("[data-toggle]").forEach(b => b.onclick = () => { const id = b.dataset.toggle; state.expanded[id] = state.expanded[id] === false ? true : !state.expanded[id]; render(); });
   qa("[data-addset]").forEach(b => b.onclick = () => { const [exId, kind] = b.dataset.addset.split("|"); addSet(exId, kind === "warmup"); });
   qa("[data-remove]").forEach(b => b.onclick = () => { const [exId, setId] = b.dataset.remove.split("|"); removeSet(exId, Number(setId)); });
+  qa("[data-startrest]").forEach(b => b.onclick = () => startRest(b.dataset.startrest));
+  qa("[data-skiprest]").forEach(b => b.onclick = () => stopRest(b.dataset.skiprest));
 
   qa("[data-weight]").forEach(inp => {
     inp.oninput = e => { const [exId, setId] = inp.dataset.weight.split("|"); updateSet(exId, Number(setId), "weight", e.target.value); };
@@ -335,74 +434,11 @@ function bindEvents() {
   });
 }
 
-render();
+init();
 </script>
-</body>
+</body>body>
+</html>html>
+</script></p>L</div></body></style>
+</title>W</head>
 </html>
-9px; border: 1px solid var(--border);
-    background: #fff; color: var(--blue); font-size: 13px; font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
-  }
-  .icon-circle {
-    width: 38px; height: 38px; border-radius: 50%; background: var(--bg);
-    display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
-  }
-  .icon-circle-sm {
-    width: 30px; height: 30px; border-radius: 50%; background: var(--bg);
-    display: flex; align-items: center; justify-content: center; color: var(--blue); flex-shrink: 0;
-  }
-  .ex-name { font-size: 16px; font-weight: 600; }
-  .ex-meta { font-size: 13px; color: var(--muted); margin-top: 1px; }
-  .add-exercise-btn {
-    width: 100%; margin-top: 16px; height: 48px; border-radius: 14px; border: none; background: var(--blue);
-    color: #fff; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center;
-    gap: 8px; cursor: pointer;
-  }
-  .picker-card { margin-top: 16px; background: #fff; border-radius: 16px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-  .picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .picker-title { font-size: 16px; font-weight: 600; }
-  .icon-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .picker-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
-  .picker-item {
-    display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 10px; border: none;
-    background: transparent; font-size: 15px; color: var(--text); cursor: pointer; text-align: left; width: 100%;
-  }
-  .picker-item:hover { background: var(--bg); }
-  .picker-cat { font-size: 12px; color: var(--muted); }
-  .new-exercise-btn {
-    margin-top: 10px; width: 100%; height: 40px; border-radius: 10px; border: 1px dashed #c7c7cc; background: transparent;
-    color: var(--blue); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center;
-    gap: 6px; cursor: pointer;
-  }
-  .new-exercise-form { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
-  .text-input { height: 38px; border-radius: 10px; border: 1px solid var(--border); background: #f9f9fb; padding: 0 12px; font-size: 15px; outline: none; width: 100%; }
-  .category-row { display: flex; gap: 8px; }
-  .category-chip {
-    flex: 1; height: 36px; border-radius: 9px; border: 1px solid var(--border); background: #fff;
-    display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #3a3a3c; cursor: pointer;
-  }
-  .category-chip.active { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .confirm-btn { height: 40px; border-radius: 10px; border: none; background: #34c759; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; }
-</style>
-</head>
-<body>
-<div id="app"></div>
-
-<script>
-/* ---------- Icons (simple Apple-style SVGs) ---------- */
-const ICONS = {
-  dumbbell: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5 17.5 17.5"/><path d="M2 8 5 5"/><path d="M22 16l-3 3"/><path d="M14.5 3.5l4 4"/><path d="M3.5 14.5l4 4"/><rect x="1" y="10" width="4" height="4" rx="1"/><rect x="19" y="10" width="4" height="4" rx="1"/><path d="M9 5l-2 2"/><path d="M17 19l2-2"/></svg>',
-  machine: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
-  cardio: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M4 17l4-2 2-4"/><path d="M10 11l2 2 5-2"/><path d="M12 13l-1 4 4 4"/><path d="M6 21l3-4"/></svg>',
-  x: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>',
-  chevronDown: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
-  chevronUp: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
-  plus: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
-  flame: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 1 1-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>',
-  timer: '<svg width="{s}" height="{s}" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>',
-};
-function icon(name, size) { return ICONS[name].replaceAll("{s}", size || 18); }
-
-/* ---------- Categories & exercises ---------- */
-const CATEGORY_META = {
-  free: { label: "Free weight", icon
+"
