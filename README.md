@@ -39,6 +39,6 @@ A minimalist, Apple-style web app for logging workout sessions. Runs as a single
 
 ## Known state / notes
 
-- The filename suggests "Milestone 10" with a focus on the exercise picker — likely a checkpoint in iterative development.
+
 - The end of the HTML file has a few stray/orphaned closing tags (`</p></div></body></style></title>W</head>`) that have no functional effect but could be cleaned up.
 - The app is designed for a max width of 480px (mobile-first approach).
